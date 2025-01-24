@@ -1,28 +1,23 @@
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
-public class Player : MonoBehaviour
+public class Player : Character
 {
-    [SerializeField]
-    private float speed;
-    private Vector2 direction;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+     protected override void Update()
     {
         GetInput();
-        Move();
+
+        base.Update();
     }
 
-    public void Move()
-    {
-        transform.Translate(direction * speed * Time.deltaTime );
 
-    }
 
     private void GetInput()
     {
