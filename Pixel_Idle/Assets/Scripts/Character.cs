@@ -12,10 +12,10 @@ public abstract class Character : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
-    private 
-  
+   
 
-    void Start()
+
+    protected virtual void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();

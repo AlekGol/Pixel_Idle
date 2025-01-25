@@ -3,9 +3,26 @@ using UnityEngine.TextCore.Text;
 
 public class Player : Character
 {
+    [SerializeField]
+    private Stat health;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-  
+    [SerializeField]
+    private Stat mana;
+
+
+    [SerializeField]
+    private float initHealth;
+
+    [SerializeField]
+    private float initMana;
+
+    protected override void Start()
+    {
+        health.Initialized(initHealth, initHealth);
+        mana.Initialized(initMana, initMana);
+
+        base.Start();
+    }
 
      protected override void Update()
     {
@@ -19,6 +36,19 @@ public class Player : Character
     private void GetInput()
     {
         direction = Vector2.zero;
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            health.MyCurrentValue -= 10;
+            mana.MyCurrentValue -= 20;
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            health.MyCurrentValue += 10;
+            mana.MyCurrentValue += 20;
+        }
+
+
 
         if ( Input.GetKey( KeyCode.W ))
         {
