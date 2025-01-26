@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -66,5 +67,28 @@ public class Player : Character
         {
             direction += Vector2.right;
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+
+            attackCoroutine =  StartCoroutine(Attack());
+        }
+
     }
+
+    private IEnumerator Attack()
+    {
+        if (!IsAttacking && !IsMoving)
+        {
+
+            IsAttacking = true;
+
+            animator.SetBool("Attack", true);
+
+            yield return new WaitForSeconds(3);
+
+            StopAttack();
+        }
+    }
+
 }
