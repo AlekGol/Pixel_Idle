@@ -17,6 +17,9 @@ public class Player : Character
     [SerializeField]
     private float initMana;
 
+    [SerializeField]
+    private GameObject[] spellPrefab;
+
     protected override void Start()
     {
         health.Initialized(initHealth, initHealth);
@@ -70,25 +73,34 @@ public class Player : Character
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
-            attackCoroutine =  StartCoroutine(Attack());
+            if (!IsAttacking && !IsMoving)
+            {
+                attackCoroutine = StartCoroutine(Attack());
+            }
+           
         }
 
     }
 
     private IEnumerator Attack()
     {
-        if (!IsAttacking && !IsMoving)
-        {
 
-            IsAttacking = true;
+        IsAttacking = true;
 
-            animator.SetBool("Attack", true);
+        animator.SetBool("Attack", true);
 
-            yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
 
-            StopAttack();
-        }
+        CastSpell();
+
+        StopAttack();
+    }
+
+    public void CastSpell()
+    {
+
+        Instantiate(spellPrefab[0], transform.position, Quaternion.identity);
+       
     }
 
 }
