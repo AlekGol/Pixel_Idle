@@ -8,11 +8,15 @@ public abstract class Character : MonoBehaviour
 
     protected Vector2 direction;
 
-    private Animator animator;
+    protected Animator animator;
 
     private SpriteRenderer spriteRenderer;
 
     private Rigidbody2D rb;
+
+    protected bool IsAttacking = false;
+    
+    protected Coroutine attackCoroutine;
 
    public bool IsMoving
         { get
@@ -53,10 +57,16 @@ public abstract class Character : MonoBehaviour
         if (IsMoving)
         {
             ActivateLayer("Walk");
-            if (direction.x != 0)
-            {
-                spriteRenderer.flipX = direction.x < 0;
-            }
+     
+            animator.SetFloat("x", direction.x);
+            animator.SetFloat("y", direction.y);
+
+            StopAttack();
+        }
+        else if (IsAttacking)
+        {
+            spriteRenderer.flipX = false;
+            ActivateLayer("Attack");
         }
         else
         {
@@ -73,5 +83,16 @@ public abstract class Character : MonoBehaviour
             animator.SetLayerWeight(i, 0);
         }
         animator.SetLayerWeight(animator.GetLayerIndex(layerName), 1);
+    }
+
+    public void StopAttack()
+    {
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            IsAttacking = false;
+            animator.SetBool("Attack", IsAttacking);
+        }
+       
     }
 }
