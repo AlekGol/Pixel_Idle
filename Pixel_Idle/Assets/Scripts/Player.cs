@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -20,18 +21,27 @@ public class Player : Character
     [SerializeField]
     private GameObject[] spellPrefab;
 
+    private int FaceDirection;
+
+    [SerializeField]
+    private Block[] blocks;
+
+    private Transform target;
+
     protected override void Start()
     {
         health.Initialized(initHealth, initHealth);
         mana.Initialized(initMana, initMana);
 
+       /// Debug
+       target = GameObject.Find("Target").transform;
         base.Start();
     }
 
      protected override void Update()
     {
         GetInput();
-
+        Debug.Log(LayerMask.GetMask("Block"));
         base.Update();
     }
 
@@ -56,24 +66,31 @@ public class Player : Character
 
         if ( Input.GetKey( KeyCode.W ))
         {
+            FaceDirection = 0;
             direction += Vector2.up;
         }
         if (Input.GetKey(KeyCode.A))
         {
+            FaceDirection = 3;
             direction += Vector2.left;
         }
         if (Input.GetKey(KeyCode.S))
         {
+            FaceDirection = 2;
             direction += Vector2.down;
         }
         if (Input.GetKey(KeyCode.D))
         {
+            FaceDirection = 1;
             direction += Vector2.right;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!IsAttacking && !IsMoving)
+
+            Block();
+
+            if (!IsAttacking && !IsMoving && InLineOfSight())
             {
                 attackCoroutine = StartCoroutine(Attack());
             }
@@ -103,4 +120,28 @@ public class Player : Character
        
     }
 
+    private bool InLineOfSight()
+    {
+
+        Vector3 targetDirection = (target.transform.position - transform.position).normalized;
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, targetDirection,Vector2.Distance(transform.position, target.transform.position),256);
+
+        if (hit.collider == null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void Block()
+    {
+        foreach (Block b in blocks)
+        {
+            b.Deactivate();
+        }
+
+        blocks[FaceDirection].Activate();  
+    }
 }
