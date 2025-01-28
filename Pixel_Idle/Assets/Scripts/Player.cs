@@ -26,22 +26,22 @@ public class Player : Character
     [SerializeField]
     private Block[] blocks;
 
-    private Transform target;
+    public Transform target { get; set; }
+
 
     protected override void Start()
     {
         health.Initialized(initHealth, initHealth);
         mana.Initialized(initMana, initMana);
 
-       /// Debug
-       target = GameObject.Find("Target").transform;
+      
         base.Start();
     }
 
      protected override void Update()
     {
         GetInput();
-        Debug.Log(LayerMask.GetMask("Block"));
+        
         base.Update();
     }
 
@@ -55,6 +55,7 @@ public class Player : Character
         {
             health.MyCurrentValue -= 10;
             mana.MyCurrentValue -= 20;
+            
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
@@ -90,7 +91,7 @@ public class Player : Character
 
             Block();
 
-            if (!IsAttacking && !IsMoving && InLineOfSight())
+            if (target != null && !IsAttacking && !IsMoving && InLineOfSight())
             {
                 attackCoroutine = StartCoroutine(Attack());
             }
@@ -116,8 +117,8 @@ public class Player : Character
     public void CastSpell()
     {
 
-        Instantiate(spellPrefab[0], transform.position, Quaternion.identity);
-       
+        Spell s = Instantiate(spellPrefab[0],transform.position, Quaternion.identity).GetComponent<Spell>();
+        s.target = target;
     }
 
     private bool InLineOfSight()

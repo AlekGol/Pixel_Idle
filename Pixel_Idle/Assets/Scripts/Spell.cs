@@ -9,13 +9,13 @@ public class Spell : MonoBehaviour
     [SerializeField]
     private float speed;
 
-    private Transform target;
+    public Transform target { get; set; }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
-        target = GameObject.Find("Target").transform;
+       
     }
 
     // Update is called once per frame
