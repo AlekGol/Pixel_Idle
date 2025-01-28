@@ -86,21 +86,11 @@ public class Player : Character
             direction += Vector2.right;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-
-            Block();
-
-            if (target != null && !IsAttacking && !IsMoving && InLineOfSight())
-            {
-                attackCoroutine = StartCoroutine(Attack());
-            }
-           
-        }
+ 
 
     }
 
-    private IEnumerator Attack()
+    private IEnumerator Attack(int spellIndex)
     {
 
         IsAttacking = true;
@@ -109,16 +99,22 @@ public class Player : Character
 
         yield return new WaitForSeconds(1);
 
-        CastSpell();
-
+       
+        Spell s = Instantiate(spellPrefab[spellIndex], transform.position, Quaternion.identity).GetComponent<Spell>();
+        s.target = target;
         StopAttack();
     }
 
-    public void CastSpell()
+    public void CastSpell(int spellIndex)
     {
 
-        Spell s = Instantiate(spellPrefab[0],transform.position, Quaternion.identity).GetComponent<Spell>();
-        s.target = target;
+        Block();
+
+        if (target != null && !IsAttacking && !IsMoving && InLineOfSight())
+        {
+            attackCoroutine = StartCoroutine(Attack(spellIndex));
+        }
+       
     }
 
     private bool InLineOfSight()
