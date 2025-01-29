@@ -11,6 +11,8 @@ public class Spell : MonoBehaviour
 
     public Transform target { get; set; }
 
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -26,13 +28,29 @@ public class Spell : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 direction = target.position - transform.position;
+        if (target != null)
+        {
+            Vector2 direction = target.position - transform.position;
 
-        rb.linearVelocity = direction.normalized * speed;
+            rb.linearVelocity = direction.normalized * speed;
 
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        transform.rotation = Quaternion.AngleAxis(angle,Vector3.forward);
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "HitBox" && collision.transform == target) 
+            {
+            GetComponent<Animator>().SetTrigger("Inpact");
+            rb.linearVelocity = Vector2.zero;
+            target = null;
+           
+            }
     }
 }
