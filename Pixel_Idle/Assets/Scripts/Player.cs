@@ -55,7 +55,7 @@ public class Player : Character
         {
             health.MyCurrentValue -= 10;
             mana.MyCurrentValue -= 20;
-            
+          
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
