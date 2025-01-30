@@ -85,7 +85,7 @@ public abstract class Character : MonoBehaviour
         animator.SetLayerWeight(animator.GetLayerIndex(layerName), 1);
     }
 
-    public void StopAttack()
+    public virtual void StopAttack()
     {
         if (attackCoroutine != null)
         {

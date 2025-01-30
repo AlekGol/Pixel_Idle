@@ -18,19 +18,19 @@ public class Player : Character
     [SerializeField]
     private float initMana;
 
-    [SerializeField]
-    private GameObject[] spellPrefab;
-
     private int FaceDirection;
 
     [SerializeField]
     private Block[] blocks;
+
+    private SpellBook spellBook;
 
     public Transform target { get; set; }
 
 
     protected override void Start()
     {
+        spellBook = GetComponent<SpellBook>();  
         health.Initialized(initHealth, initHealth);
         mana.Initialized(initMana, initMana);
 
@@ -92,15 +92,16 @@ public class Player : Character
 
     private IEnumerator Attack(int spellIndex)
     {
+        Spell newSpell = spellBook.CastSpell(spellIndex);
 
         IsAttacking = true;
 
         animator.SetBool("Attack", true);
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(newSpell.MyCastTime);
 
        
-        Spell s = Instantiate(spellPrefab[spellIndex], transform.position, Quaternion.identity).GetComponent<Spell>();
+        SpellScript s = Instantiate(newSpell.MySpellPrefab, transform.position, Quaternion.identity).GetComponent<SpellScript>();
         s.target = target;
         StopAttack();
     }
@@ -140,5 +141,13 @@ public class Player : Character
         }
 
         blocks[FaceDirection].Activate();  
+    }
+
+
+    public override void StopAttack()
+    {
+        spellBook.StopCasting();
+
+        base.StopAttack();
     }
 }
